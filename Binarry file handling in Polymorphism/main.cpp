@@ -113,14 +113,6 @@ void Teacher::isoutstanding() {
         cout << "*Outstanding*" << endl;
     }
 }
-char typing(Person* obj) {
-    string cl = typeid(*obj).name();
-    if (cl == "class Teacher")
-        return 'T';
-    else if (cl == "class Student")
-        return 'S';
-    return 'N';
-}
 void create_Teacher(Person* (&arr)[MAX], int& n) {
     arr[n] = new Teacher;
     arr[n++]->setter();
@@ -145,7 +137,7 @@ void write2file(Person* (&arr)[MAX], int n) {
     char ch{};
     outfile.write(reinterpret_cast<char*>(&n), sizeof(n));
     for (int i = 0; i < n; i++) {
-        ch = typing(arr[i]);
+        ch = (typeid(*arr[i]) == typeid(Student)) ? 'S' : 'T';
         outfile.write(reinterpret_cast<char*>(&ch), sizeof(ch));
         if (ch == 'T') {
             Teacher* t = dynamic_cast<Teacher*>(arr[i]);
