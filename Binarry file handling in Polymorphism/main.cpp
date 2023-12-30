@@ -162,17 +162,13 @@ void read2file(Person* (&arr)[MAX], int& n , int& nt, int &ns) {
         if (ch == 'T') {
             if (arr[i] == nullptr)
                 arr[i] = new Teacher;
-            Teacher* t = dynamic_cast<Teacher*>(arr[i]);
-            infile.read(reinterpret_cast<char*>(t), sizeof(Teacher));
-            arr[i] = t;
+            infile.read(reinterpret_cast<char*>(dynamic_cast<Teacher*>(arr[i])), sizeof(Teacher));
             nt++;
         }
         else if (ch == 'S') {
             if (arr[i] == nullptr)
                 arr[i] = new Student;
-            Student* s = dynamic_cast<Student*>(arr[i]);
-            infile.read(reinterpret_cast<char*>(s), sizeof(Student));
-            arr[i] = s;
+            infile.read(reinterpret_cast<char*>(dynamic_cast<Student*>(arr[i])), sizeof(Student));
             ns++;
         }
     }
