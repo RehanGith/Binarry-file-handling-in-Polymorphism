@@ -20,9 +20,9 @@ public:
 };
 
 Person::Person(const char* n, const char* c) {
-    strncpy_s(name, sizeof(name), n, max_n - 1);
+    strncpy_s(name,sizeof(name),  n, max_n - 1);
     name[max_n - 1] = '\0';  // Ensure null-terminated
-    strncpy_s(cnic, sizeof(cnic), c, max_cnic - 1);
+    strncpy_s(cnic,sizeof(cnic),  c, max_cnic - 1);
     cnic[max_cnic - 1] = '\0';  // Ensure null-terminated
 }
 
@@ -53,7 +53,7 @@ public:
 
 Student::Student(const char* n, const char* c, const char* d, float g)
     : Person(n, c), cgpa(g) {
-    strncpy_s(degree_program, sizeof(degree_program), d, max_n - 1);
+    strncpy_s(degree_program,sizeof(degree_program),  d, max_n - 1);
     degree_program[max_n - 1] = '\0';  // Ensure null-terminated
 }
 
@@ -90,7 +90,7 @@ public:
 
 Teacher::Teacher(const char* n, const char* c, const char* d, int no)
     : Person(n, c), no_of_publication(no) {
-    strncpy_s(department, sizeof(department), d, max_n - 1);
+    strncpy_s(department,sizeof(department),  d, max_n - 1);
     department[max_n - 1] = '\0';  // Ensure null-terminated
 }
 
@@ -140,17 +140,15 @@ void write2file(Person* (&arr)[MAX], int n) {
         ch = (typeid(*arr[i]) == typeid(Student)) ? 'S' : 'T';
         outfile.write(reinterpret_cast<char*>(&ch), sizeof(ch));
         if (ch == 'T') {
-            Teacher* t = dynamic_cast<Teacher*>(arr[i]);
-            outfile.write(reinterpret_cast<char*>(t), sizeof(Teacher));
+            outfile.write(reinterpret_cast<char*>(dynamic_cast<Teacher*>(arr[i])), sizeof(Teacher));
         }
         else if (ch == 'S') {
-            Student* s = dynamic_cast<Student*>(arr[i]);
-            outfile.write(reinterpret_cast<char*>(s), sizeof(Student));
+            outfile.write(reinterpret_cast<char*>(dynamic_cast<Student*>(arr[i])), sizeof(Student));
         }
     }
     outfile.close();
 }
-void read2file(Person* (&arr)[MAX], int& n) {
+void read2file(Person* (&arr)[MAX], int& n , int& nt, int &ns) {
     ifstream infile;
     infile.open("abc.DAT", ios::in | ios::binary);
     if (!infile) {
@@ -167,7 +165,7 @@ void read2file(Person* (&arr)[MAX], int& n) {
             Teacher* t = dynamic_cast<Teacher*>(arr[i]);
             infile.read(reinterpret_cast<char*>(t), sizeof(Teacher));
             arr[i] = t;
-            arr[i]->getter();
+            nt++;
         }
         else if (ch == 'S') {
             if (arr[i] == nullptr)
@@ -175,7 +173,7 @@ void read2file(Person* (&arr)[MAX], int& n) {
             Student* s = dynamic_cast<Student*>(arr[i]);
             infile.read(reinterpret_cast<char*>(s), sizeof(Student));
             arr[i] = s;
-            arr[i]->getter();
+            ns++;
         }
     }
 }
@@ -215,7 +213,7 @@ int main() {
             write2file(arr, n);
             break;
         case '6': {
-            read2file(arr, n);
+            read2file(arr, n , nt, ns);
             break;
         }
         case '7':
